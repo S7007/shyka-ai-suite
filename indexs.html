@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shyka AI Suite - Your Business Revolution</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes glow { 0% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); } 50% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.8); } 100% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); } }
+        .floating { animation: float 5s ease-in-out infinite; }
+        .fade-in { animation: fadeIn 1.2s ease-out forwards; }
+        .slide-in { animation: slideIn 1s ease-out forwards; }
+        .glow-effect { animation: glow 3s ease-in-out infinite; }
+        .gradient-text { background: linear-gradient(90deg, #3B82F6, #10B981); -webkit-background-clip: text; color: transparent; }
+        .card-hover { transition: all 0.4s ease; }
+        .card-hover:hover { transform: translateY(-12px) scale(1.03); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); }
+        .navbar-sticky { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(10, 20, 40, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -6px; left: 0; background: #10B981; transition: width 0.3s ease; }
+        .nav-link:hover::after { width: 100%; }
+        .btn-primary { background: linear-gradient(45deg, #10B981, #3B82F6); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 12px 24px rgba(16, 185, 129, 0.5); }
+        .btn-secondary { background: linear-gradient(45deg, #F59E0B, #EF4444); transition: all 0.3s ease; }
+        .btn-secondary:hover { transform: scale(1.05); box-shadow: 0 12px 24px rgba(239, 68, 68, 0.5); }
+        .demo-section { display: none; }
+        .demo-section.active { display: block; }
+        .section-bg { position: relative; overflow: hidden; }
+        .section-bg::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(10, 20, 40, 0) 70%); z-index: -1; }
+        .hero-particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .hero-particles::before { content: ''; position: absolute; width: 4px; height: 4px; background: #10B981; border-radius: 50%; animation: particleMove 6s infinite; }
+        @keyframes particleMove { 0% { transform: translate(0, 0); opacity: 1; } 100% { transform: translate(150vw, 90vh); opacity: 0; } }
+        body { font-family: 'Poppins', sans-serif; line-height: 1.7; background: linear-gradient(135deg, #0A1428, #1E3A8A); color: #D1D5DB; }
+        .chat-message.bot { background: #1E3A8A; border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+        .chat-message.user { background: #10B981; border-radius: 12px; padding: 12px; margin-bottom: 12px; text-align: right; }
+        .highlight-box { border-left: 4px solid #10B981; padding-left: 16px; background: rgba(16, 185, 129, 0.1); }
+        .feature-list { list-style: none; padding: 0; }
+        .feature-list li { position: relative; padding-left: 24px; margin-bottom: 8px; }
+        .feature-list li::before { content: '✔'; position: absolute; left: 0; color: #10B981; font-weight: bold; }
+        .output-box { background: #1F2937; padding: 16px; border-radius: 8px; margin-top: 12px; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body x-data="{ activeTab: 'demo1', isChatOpen: false, chatMessages: [{ sender: 'bot', text: 'Hi! Ready to solve your toughest business problems?' }], isVideoOpen: false, demoResults: {} }">
+
+    <!-- Navbar -->
+    <nav class="navbar-sticky shadow-2xl">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-3xl font-bold tracking-tight"><span class="gradient-text">Shyka</span> AI Suite</div>
+            <div class="hidden md:flex items-center space-x-12">
+                <ul class="flex space-x-8 text-gray-200 font-medium">
+                    <li><a href="#home" class="nav-link hover:text-emerald-400 transition">Home</a></li>
+                    <li><a href="#why-shyka" class="nav-link hover:text-emerald-400 transition">Why Shyka</a></li>
+                    <li><a href="#agents" class="nav-link hover:text-emerald-400 transition">AI Agents</a></li>
+                    <li><a href="#solutions" class="nav-link hover:text-emerald-400 transition">Solutions</a></li>
+                    <li><a href="#features" class="nav-link hover:text-emerald-400 transition">Features</a></li>
+                    <li><a href="#success-stories" class="nav-link hover:text-emerald-400 transition">Success Stories</a></li>
+                    <li><a href="#roi-calculator" class="nav-link hover:text-emerald-400 transition">ROI Calculator</a></li>
+                    <li><a href="#pricing" class="nav-link hover:text-emerald-400 transition">Pricing</a></li>
+                    <li><a href="#contact" class="nav-link hover:text-emerald-400 transition">Contact</a></li>
+                </ul>
+                <button class="btn-primary px-6 py-2 rounded-full text-white font-semibold">Start Free Trial</button>
+            </div>
+            <button class="md:hidden text-gray-200 focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="home" class="relative pt-24 section-bg">
+        <div class="hero-particles"></div>
+        <div class="container mx-auto px-6 py-28 text-center">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 floating">
+                <span class="gradient-text">Master Your Business</span><br>
+                <span class="text-3xl md:text-4xl text-gray-300">with Shyka AI Suite</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-10 max-w-3xl mx-auto leading-relaxed">10 cutting-edge AI agents built to obliterate inefficiencies, solve complex problems, and propel your business to new heights.</p>
+            <div class="flex justify-center gap-6">
+                <button class="btn-primary px-8 py-4 rounded-full text-lg font-semibold">Solve My Problems Now</button>
+                <button @click="isVideoOpen = true" class="border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-500/10 px-8 py-4 rounded-full text-lg font-semibold transition">Watch How It Works</button>
+            </div>
+            <div class="mt-16 max-w-5xl mx-auto fade-in">
+                <img src="https://source.unsplash.com/featured/?ai,business,modern" alt="AI Business Solution" class="rounded-xl shadow-2xl w-full border border-gray-700 glow-effect">
+            </div>
+        </div>
+        <!-- Video Modal -->
+        <div x-show="isVideoOpen" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50" @click.outside="isVideoOpen = false">
+            <div class="bg-gray-900 rounded-xl p-6 max-w-4xl w-full">
+                <iframe width="100%" height="400" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allowfullscreen></iframe>
+                <button @click="isVideoOpen = false" class="mt-4 btn-secondary px-6 py-2 rounded-lg">Close</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Why Shyka Section -->
+    <section id="why-shyka" class="py-24 section-bg">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 gradient-text">The Future of Business Efficiency</h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto text-center">Shyka AI Suite delivers unmatched solutions for your toughest challenges.</p>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl text-center slide-in">
+                    <i class="fas fa-rocket text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-2xl font-semibold mb-4">Lightning Fast</h3>
+                    <p class="text-gray-400">Results in seconds, not days.</p>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl text-center slide-in" style="animation-delay: 0.2s;">
+                    <i class="fas fa-brain text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-2xl font-semibold mb-4">Smart Automation</h3>
+                    <p class="text-gray-400">Handles complex tasks effortlessly.</p>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl text-center slide-in" style="animation-delay: 0.4s;">
+                    <i class="fas fa-shield-alt text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-2xl font-semibold mb-4">Rock-Solid Security</h3>
+                    <p class="text-gray-400">Your data, fully protected.</p>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl text-center slide-in" style="animation-delay: 0.6s;">
+                    <i class="fas fa-expand-arrows-alt text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-2xl font-semibold mb-4">Scales with You</h3>
+                    <p class="text-gray-400">From startup to enterprise.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Agents Section -->
+    <section id="agents" class="py-24 bg-gray-900/30 section-bg">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 gradient-text">Your AI Powerhouse</h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto text-center">10 specialized agents delivering real-time, problem-solving brilliance.</p>
+            <div class="flex flex-wrap gap-4 mb-12 justify-center">
+                <button @click="activeTab = 'demo1'" :class="activeTab === 'demo1' ? 'bg-emerald-500' : 'bg-gray-800 hover:bg-gray-700'" class="px-5 py-2 rounded-full font-medium transition">Excel Automation</button>
+                <button @click="activeTab = 'demo2'" :class="activeTab === 'demo2' ? 'bg-emerald-500' : 'bg-gray-800 hover:bg-gray-700'" class="px-5 py-2 rounded-full font-medium transition">Forecasting</button>
+                <button @click="activeTab = 'demo3'" :class="activeTab === 'demo3' ? 'bg-emerald-500' : 'bg-gray-800 hover:bg-gray-700'" class="px-5 py-2 rounded-full font-medium transition">Fraud Detection</button>
+                <button @click="activeTab = 'demo4'" :class="activeTab === 'demo4' ? 'bg-emerald-500' : 'bg-gray-800 hover:bg-gray-700'" class="px-5 py-2 rounded-full font-medium transition">Segmentation</button>
+                <button @click="activeTab = 'demo5'" :class="activeTab === 'demo5' ? 'bg-emerald-500' : 'bg-gray-800 hover:bg-gray-700'" class="px-5 py-2 rounded-full font-medium transition">Churn Prediction</button>
+                <button @click="activeTab = 'demo6'" :class="activeTab === 'demo6' ? 'bg-emerald-500' : 'bg-gray-800 hover:bg-gray-700'" class="px-5 py-2 rounded-full font-medium transition">Image Classification</button>
+                <button @click="activeTab = 'demo7'" :class="activeTab === 'demo7' ? 'bg-emerald-500' : 'bg-gray-800 hover:bg-gray-700'" class="px-5 py-2 rounded-full font-medium transition">Sentiment Analysis</button>
+                <button @click="activeTab = 'demo8'" :class="activeTab === 'demo8' ? 'bg-emerald-500' : 'bg-gray-800 hover:bg-gray-700'" class="px-5 py-2 rounded-full font-medium transition">NLP Tasks</button>
+                <button @click="activeTab = 'demo9'" :class="activeTab === 'demo9' ? 'bg-emerald-500' : 'bg-gray-800 hover:bg-gray-700'" class="px-5 py-2 rounded-full font-medium transition">Maintenance</button>
+                <button @click="activeTab = 'demo10'" :class="activeTab === 'demo10' ? 'bg-emerald-500' : 'bg-gray-800 hover:bg-gray-700'" class="px-5 py-2 rounded-full font-medium transition">Recommendations</button>
+            </div>
+
+            <!-- Demo 1: Excel Report Generation -->
+            <div class="demo-section fade-in" :class="{ 'active': activeTab === 'demo1' }">
+                <div class="bg-gray-900/90 rounded-2xl p-10 shadow-xl border border-gray-700">
+                    <h3 class="text-3xl font-bold mb-6 gradient-text">Excel Report Generation</h3>
+                    <p class="text-gray-300 mb-4"><strong>Problem Solved:</strong> Tedious manual reporting delays decisions.</p>
+                    <p class="text-gray-300 mb-4"><strong>Solution:</strong> Turns requests into professional Excel reports instantly.</p>
+                    <p class="text-gray-300 mb-4"><strong>How It Works:</strong> NLP interprets queries, SQL pulls data, Pandas/OpenPyXL formats with charts.</p>
+                    <p class="text-gray-300 mb-4 highlight-box"><strong>Key Features:</strong>
+                        <ul class="feature-list">
+                            <li>Voice command support</li>
+                            <li>Live database sync</li>
+                            <li>Dynamic chart generation</li>
+                            <li>Multi-format exports (Excel, PDF)</li>
+                        </ul>
+                    </p>
+                    <p class="text-gray-300 mb-4"><strong>Business Impact:</strong> Saves 92% of reporting time, accelerating strategy.</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <textarea id="excel-input" class="w-full bg-gray-800/50 rounded-lg p-4 h-32 border border-gray-700 focus:ring-2 focus:ring-emerald-500" placeholder="E.g., 'Generate a Q1 sales report with regional breakdowns and bar charts'"></textarea>
+                            <button onclick="generateExcelDemo()" class="btn-primary px-6 py-3 rounded-lg font-semibold">Generate Report</button>
+                            <button onclick="downloadExcelDemo()" class="btn-secondary px-6 py-3 rounded-lg font-semibold">Download Result</button>
+                            <div id="excel-output" class="output-box text-gray-400"></div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <canvas id="excel-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo 2: Time Series Forecasting -->
+            <div class="demo-section fade-in" :class="{ 'active': activeTab === 'demo2' }">
+                <div class="bg-gray-900/90 rounded-2xl p-10 shadow-xl border border-gray-700">
+                    <h3 class="text-3xl font-bold mb-6 gradient-text">Time Series Forecasting</h3>
+                    <p class="text-gray-300 mb-4"><strong>Problem Solved:</strong> Inaccurate forecasts disrupt planning.</p>
+                    <p class="text-gray-300 mb-4"><strong>Solution:</strong> Predicts sales, demand, or trends with precision.</p>
+                    <p class="text-gray-300 mb-4"><strong>How It Works:</strong> Combines ARIMA, Prophet, and LSTM for robust predictions.</p>
+                    <p class="text-gray-300 mb-4 highlight-box"><strong>Key Features:</strong>
+                        <ul class="feature-list">
+                            <li>Multi-variable analysis</li>
+                            <li>Seasonality detection</li>
+                            <li>Confidence intervals</li>
+                            <li>Scenario simulations</li>
+                        </ul>
+                    </p>
+                    <p class="text-gray-300 mb-4"><strong>Business Impact:</strong> Improves accuracy by 45%, optimizing inventory.</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <textarea id="forecast-input" class="w-full bg-gray-800/50 rounded-lg p-4 h-32 border border-gray-700 focus:ring-2 focus:ring-emerald-500" placeholder="E.g., 'Forecast next 6 months sales with $5000, $5200, $5400 data'"></textarea>
+                            <button onclick="generateForecastDemo()" class="btn-primary px-6 py-3 rounded-lg font-semibold">Run Forecast</button>
+                            <div id="forecast-output" class="output-box text-gray-400"></div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <canvas id="forecast-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo 3: Fraud Detection -->
+            <div class="demo-section fade-in" :class="{ 'active': activeTab === 'demo3' }">
+                <div class="bg-gray-900/90 rounded-2xl p-10 shadow-xl border border-gray-700">
+                    <h3 class="text-3xl font-bold mb-6 gradient-text">Fraud Detection</h3>
+                    <p class="text-gray-300 mb-4"><strong>Problem Solved:</strong> Hidden fraud bleeds profits.</p>
+                    <p class="text-gray-300 mb-4"><strong>Solution:</strong> Identifies suspicious transactions in real-time.</p>
+                    <p class="text-gray-300 mb-4"><strong>How It Works:</strong> Isolation Forest and Autoencoders flag anomalies.</p>
+                    <p class="text-gray-300 mb-4 highlight-box"><strong>Key Features:</strong>
+                        <ul class="feature-list">
+                            <li>Live transaction monitoring</li>
+                            <li>Anomaly scoring</li>
+                            <li>Custom thresholds</li>
+                            <li>Instant alerts</li>
+                        </ul>
+                    </p>
+                    <p class="text-gray-300 mb-4"><strong>Business Impact:</strong> Cuts fraud losses by 97%, protecting revenue.</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <textarea id="fraud-input" class="w-full bg-gray-800/50 rounded-lg p-4 h-32 border border-gray-700 focus:ring-2 focus:ring-emerald-500" placeholder="E.g., 'Analyze transactions: $50, $75, $5000, $100'"></textarea>
+                            <button onclick="generateFraudDemo()" class="btn-primary px-6 py-3 rounded-lg font-semibold">Detect Fraud</button>
+                            <div id="fraud-output" class="output-box text-gray-400"></div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <canvas id="fraud-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo 4: Customer Segmentation -->
+            <div class="demo-section fade-in" :class="{ 'active': activeTab === 'demo4' }">
+                <div class="bg-gray-900/90 rounded-2xl p-10 shadow-xl border border-gray-700">
+                    <h3 class="text-3xl font-bold mb-6 gradient-text">Customer Segmentation</h3>
+                    <p class="text-gray-300 mb-4"><strong>Problem Solved:</strong> Generic marketing wastes resources.</p>
+                    <p class="text-gray-300 mb-4"><strong>Solution:</strong> Clusters customers for laser-focused campaigns.</p>
+                    <p class="text-gray-300 mb-4"><strong>How It Works:</strong> k-means, DBSCAN, and PCA group by behavior and data.</p>
+                    <p class="text-gray-300 mb-4 highlight-box"><strong>Key Features:</strong>
+                        <ul class="feature-list">
+                            <li>Real-time segment updates</li>
+                            <li>Behavioral profiling</li>
+                            <li>CRM integration</li>
+                            <li>Interactive visuals</li>
+                        </ul>
+                    </p>
+                    <p class="text-gray-300 mb-4"><strong>Business Impact:</strong> Boosts ROI by 65% with targeted efforts.</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <textarea id="segment-input" class="w-full bg-gray-800/50 rounded-lg p-4 h-32 border border-gray-700 focus:ring-2 focus:ring-emerald-500" placeholder="E.g., 'Segment 100 customers by spend: $50, $200, $75...'"></textarea>
+                            <button onclick="generateSegmentDemo()" class="btn-primary px-6 py-3 rounded-lg font-semibold">Segment Now</button>
+                            <div id="segment-output" class="output-box text-gray-400"></div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <canvas id="segment-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo 5: Churn Prediction -->
+            <div class="demo-section fade-in" :class="{ 'active': activeTab === 'demo5' }">
+                <div class="bg-gray-900/90 rounded-2xl p-10 shadow-xl border border-gray-700">
+                    <h3 class="text-3xl font-bold mb-6 gradient-text">Churn Prediction</h3>
+                    <p class="text-gray-300 mb-4"><strong>Problem Solved:</strong> Losing clients shrinks profits.</p>
+                    <p class="text-gray-300 mb-4"><strong>Solution:</strong> Flags at-risk customers with actionable insights.</p>
+                    <p class="text-gray-300 mb-4"><strong>How It Works:</strong> Random Forest and XGBoost analyze engagement data.</p>
+                    <p class="text-gray-300 mb-4 highlight-box"><strong>Key Features:</strong>
+                        <ul class="feature-list">
+                            <li>Risk probability scores</li>
+                            <li>Retention strategies</li>
+                            <li>Live monitoring</li>
+                            <li>Trend analysis</li>
+                        </ul>
+                    </p>
+                    <p class="text-gray-300 mb-4"><strong>Business Impact:</strong> Reduces churn by 40%, saving millions.</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <textarea id="churn-input" class="w-full bg-gray-800/50 rounded-lg p-4 h-32 border border-gray-700 focus:ring-2 focus:ring-emerald-500" placeholder="E.g., 'Predict churn for logins: 5, 2, 10, 1...'"></textarea>
+                            <button onclick="generateChurnDemo()" class="btn-primary px-6 py-3 rounded-lg font-semibold">Predict Churn</button>
+                            <div id="churn-output" class="output-box text-gray-400"></div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <canvas id="churn-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo 6: Image Classification -->
+            <div class="demo-section fade-in" :class="{ 'active': activeTab === 'demo6' }">
+                <div class="bg-gray-900/90 rounded-2xl p-10 shadow-xl border border-gray-700">
+                    <h3 class="text-3xl font-bold mb-6 gradient-text">Image Classification</h3>
+                    <p class="text-gray-300 mb-4"><strong>Problem Solved:</strong> Manual image sorting slows operations.</p>
+                    <p class="text-gray-300 mb-4"><strong>Solution:</strong> Labels images with high accuracy instantly.</p>
+                    <p class="text-gray-300 mb-4"><strong>How It Works:</strong> CNNs (ResNet, Inception) classify based on training.</p>
+                    <p class="text-gray-300 mb-4 highlight-box"><strong>Key Features:</strong>
+                        <ul class="feature-list">
+                            <li>Multi-class support</li>
+                            <li>Batch processing</li>
+                            <li>Custom model training</li>
+                            <li>API endpoints</li>
+                        </ul>
+                    </p>
+                    <p class="text-gray-300 mb-4"><strong>Business Impact:</strong> Cuts processing time by 85%, boosting efficiency.</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <input type="file" id="image-input" class="w-full bg-gray-800/50 rounded-lg p-4 border border-gray-700 focus:ring-2 focus:ring-emerald-500" accept="image/*">
+                            <button onclick="generateImageDemo()" class="btn-primary px-6 py-3 rounded-lg font-semibold">Classify Image</button>
+                            <div id="image-output" class="output-box text-gray-400"></div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <canvas id="image-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo 7: Sentiment Analysis -->
+            <div class="demo-section fade-in" :class="{ 'active': activeTab === 'demo7' }">
+                <div class="bg-gray-900/90 rounded-2xl p-10 shadow-xl border border-gray-700">
+                    <h3 class="text-3xl font-bold mb-6 gradient-text">Sentiment Analysis</h3>
+                    <p class="text-gray-300 mb-4"><strong>Problem Solved:</strong> Misjudged feedback stalls improvements.</p>
+                    <p class="text-gray-300 mb-4"><strong>Solution:</strong> Analyzes customer sentiment with precision.</p>
+                    <p class="text-gray-300 mb-4"><strong>How It Works:</strong> BERT and NLTK score text for positivity or negativity.</p>
+                    <p class="text-gray-300 mb-4 highlight-box"><strong>Key Features:</strong>
+                        <ul class="feature-list">
+                            <li>Multi-language processing</li>
+                            <li>Emotion breakdown</li>
+                            <li>Social media sync</li>
+                            <li>Trend reporting</li>
+                        </ul>
+                    </p>
+                    <p class="text-gray-300 mb-4"><strong>Business Impact:</strong> Enhances satisfaction by 55% with insights.</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <textarea id="sentiment-input" class="w-full bg-gray-800/50 rounded-lg p-4 h-32 border border-gray-700 focus:ring-2 focus:ring-emerald-500" placeholder="E.g., 'The product is amazing but delivery was late'"></textarea>
+                            <button onclick="generateSentimentDemo()" class="btn-primary px-6 py-3 rounded-lg font-semibold">Analyze Sentiment</button>
+                            <div id="sentiment-output" class="output-box text-gray-400"></div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <canvas id="sentiment-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo 8: NLP Tasks -->
+            <div class="demo-section fade-in" :class="{ 'active': activeTab === 'demo8' }">
+                <div class="bg-gray-900/90 rounded-2xl p-10 shadow-xl border border-gray-700">
+                    <h3 class="text-3xl font-bold mb-6 gradient-text">NLP Tasks</h3>
+                    <p class="text-gray-300 mb-4"><strong>Problem Solved:</strong> Manual text work wastes time.</p>
+                    <p class="text-gray-300 mb-4"><strong>Solution:</strong> Automates summarization, extraction, and translation.</p>
+                    <p class="text-gray-300 mb-4"><strong>How It Works:</strong> GPT-4 and BERT process complex text tasks.</p>
+                    <p class="text-gray-300 mb-4 highlight-box"><strong>Key Features:</strong>
+                        <ul class="feature-list">
+                            <li>Smart summarization</li>
+                            <li>Entity detection</li>
+                            <li>Multi-language translation</li>
+                            <li>Keyword insights</li>
+                        </ul>
+                    </p>
+                    <p class="text-gray-300 mb-4"><strong>Business Impact:</strong> Saves 75% on text processing, freeing resources.</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <textarea id="nlp-input" class="w-full bg-gray-800/50 rounded-lg p-4 h-32 border border-gray-700 focus:ring-2 focus:ring-emerald-500" placeholder="E.g., 'Summarize: AI is revolutionizing industries...'"></textarea>
+                            <button onclick="generateNLPDemo()" class="btn-primary px-6 py-3 rounded-lg font-semibold">Process Text</button>
+                            <div id="nlp-output" class="output-box text-gray-400"></div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <canvas id="nlp-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo 9: Predictive Maintenance -->
+            <div class="demo-section fade-in" :class="{ 'active': activeTab === 'demo9' }">
+                <div class="bg-gray-900/90 rounded-2xl p-10 shadow-xl border border-gray-700">
+                    <h3 class="text-3xl font-bold mb-6 gradient-text">Predictive Maintenance</h3>
+                    <p class="text-gray-300 mb-4"><strong>Problem Solved:</strong> Unexpected breakdowns halt production.</p>
+                    <p class="text-gray-300 mb-4"><strong>Solution:</strong> Predicts equipment failures before they happen.</p>
+                    <p class="text-gray-300 mb-4"><strong>How It Works:</strong> IoT data and Scikit-learn forecast maintenance needs.</p>
+                    <p class="text-gray-300 mb-4 highlight-box"><strong>Key Features:</strong>
+                        <ul class="feature-list">
+                            <li>Sensor data integration</li>
+                            <li>Failure risk scoring</li>
+                            <li>Automated scheduling</li>
+                            <li>Downtime predictions</li>
+                        </ul>
+                    </p>
+                    <p class="text-gray-300 mb-4"><strong>Business Impact:</strong> Reduces downtime by 50%, extending asset life.</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <textarea id="maintenance-input" class="w-full bg-gray-800/50 rounded-lg p-4 h-32 border border-gray-700 focus:ring-2 focus:ring-emerald-500" placeholder="E.g., 'Predict maintenance for runtime: 100h, 200h, 300h...'"></textarea>
+                            <button onclick="generateMaintenanceDemo()" class="btn-primary px-6 py-3 rounded-lg font-semibold">Predict Maintenance</button>
+                            <div id="maintenance-output" class="output-box text-gray-400"></div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <canvas id="maintenance-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo 10: Recommendation Systems -->
+            <div class="demo-section fade-in" :class="{ 'active': activeTab === 'demo10' }">
+                <div class="bg-gray-900/90 rounded-2xl p-10 shadow-xl border border-gray-700">
+                    <h3 class="text-3xl font-bold mb-6 gradient-text">Recommendation Systems</h3>
+                    <p class="text-gray-300 mb-4"><strong>Problem Solved:</strong> Missed sales from generic suggestions.</p>
+                    <p class="text-gray-300 mb-4"><strong>Solution:</strong> Offers personalized product recommendations.</p>
+                    <p class="text-gray-300 mb-4"><strong>How It Works:</strong> Collaborative filtering and Word2Vec match user preferences.</p>
+                    <p class="text-gray-300 mb-4 highlight-box"><strong>Key Features:</strong>
+                        <ul class="feature-list">
+                            <li>Live preference updates</li>
+                            <li>Behavioral analysis</li>
+                            <li>A/B testing support</li>
+                            <li>E-commerce integration</li>
+                        </ul>
+                    </p>
+                    <p class="text-gray-300 mb-4"><strong>Business Impact:</strong> Increases sales by 55% with tailored offers.</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <textarea id="recommend-input" class="w-full bg-gray-800/50 rounded-lg p-4 h-32 border border-gray-700 focus:ring-2 focus:ring-emerald-500" placeholder="E.g., 'Recommend for user who bought: laptop, mouse...'"></textarea>
+                            <button onclick="generateRecommendDemo()" class="btn-primary px-6 py-3 rounded-lg font-semibold">Get Recommendations</button>
+                            <div id="recommend-output" class="output-box text-gray-400"></div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <canvas id="recommend-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 section-bg">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 gradient-text">Next-Level Capabilities</h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto text-center">Shyka AI Suite redefines what’s possible for your business.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl slide-in">
+                    <i class="fas fa-cloud-upload-alt text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-2xl font-semibold mb-4">Cloud-Powered</h3>
+                    <p class="text-gray-400">Fast, secure, and always accessible.</p>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl slide-in" style="animation-delay: 0.2s;">
+                    <i class="fas fa-code-branch text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-2xl font-semibold mb-4">API-First Design</h3>
+                    <p class="text-gray-400">Seamless integration with any platform.</p>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl slide-in" style="animation-delay: 0.4s;">
+                    <i class="fas fa-users-cog text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-2xl font-semibold mb-4">Team Controls</h3>
+                    <p class="text-gray-400">Granular access for secure collaboration.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section id="solutions" class="py-24 bg-gray-900/30 section-bg">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 gradient-text">Industry-Specific Mastery</h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto text-center">Shyka AI adapts to your sector’s unique needs.</p>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+                <div class="card-hover bg-gray-900/80 p-6 rounded-xl text-center slide-in">
+                    <i class="fas fa-shopping-cart text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-xl font-semibold mb-3">Retail</h3>
+                    <p class="text-gray-400">Optimize inventory, personalize offers.</p>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-6 rounded-xl text-center slide-in" style="animation-delay: 0.2s;">
+                    <i class="fas fa-university text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-xl font-semibold mb-3">Finance</h3>
+                    <p class="text-gray-400">Detect fraud, forecast markets.</p>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-6 rounded-xl text-center slide-in" style="animation-delay: 0.4s;">
+                    <i class="fas fa-industry text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-xl font-semibold mb-3">Manufacturing</h3>
+                    <p class="text-gray-400">Prevent downtime, streamline production.</p>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-6 rounded-xl text-center slide-in" style="animation-delay: 0.6s;">
+                    <i class="fas fa-heartbeat text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-xl font-semibold mb-3">Healthcare</h3>
+                    <p class="text-gray-400">Classify images, improve care.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories Section -->
+    <section id="success-stories" class="py-24 section-bg">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 gradient-text">Success You Can Trust</h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto text-center">Real businesses, real results with Shyka AI.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl slide-in">
+                    <h3 class="text-2xl font-semibold mb-4">Retail Leader</h3>
+                    <p class="text-gray-400 mb-4">"Reduced reporting time by 92% and doubled upsells."</p>
+                    <p class="text-emerald-500 font-semibold">ROI: 500% in 6 months</p>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl slide-in" style="animation-delay: 0.2s;">
+                    <h3 class="text-2xl font-semibold mb-4">Finance Titan</h3>
+                    <p class="text-gray-400 mb-4">"Saved $6M with fraud prevention."</p>
+                    <p class="text-emerald-500 font-semibold">Savings: $5.9M</p>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl slide-in" style="animation-delay: 0.4s;">
+                    <h3 class="text-2xl font-semibold mb-4">Manufacturing Pro</h3>
+                    <p class="text-gray-400 mb-4">"Slashed downtime by 50%."</p>
+                    <p class="text-emerald-500 font-semibold">Efficiency: +45%</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator Section -->
+    <section id="roi-calculator" class="py-24 bg-gray-900/30 section-bg">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 gradient-text">See Your Savings</h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto text-center">Calculate the impact Shyka AI can have on your bottom line.</p>
+            <div class="bg-gray-900/90 rounded-2xl p-8 shadow-xl max-w-2xl mx-auto fade-in">
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-gray-300 mb-2">Monthly Revenue ($)</label>
+                        <input type="number" id="revenue" class="w-full bg-gray-800/50 rounded-lg p-4 border border-gray-700 focus:ring-2 focus:ring-emerald-500" placeholder="E.g., 100000">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">Current Efficiency (%)</label>
+                        <input type="number" id="efficiency" class="w-full bg-gray-800/50 rounded-lg p-4 border border-gray-700 focus:ring-2 focus:ring-emerald-500" placeholder="E.g., 70">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">Weekly Hours Saved</label>
+                        <input type="number" id="hours" class="w-full bg-gray-800/50 rounded-lg p-4 border border-gray-700 focus:ring-2 focus:ring-emerald-500" placeholder="E.g., 20">
+                    </div>
+                    <button onclick="calculateROI()" class="btn-primary px-6 py-3 rounded-lg font-semibold w-full">Calculate ROI</button>
+                    <div id="roi-output" class="text-gray-400 text-center"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Section -->
+    <section id="integration" class="py-24 section-bg">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 gradient-text">Plug In Anywhere</h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto text-center">Shyka AI integrates with your existing ecosystem.</p>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-10">
+                <div class="card-hover bg-gray-900/80 p-6 rounded-xl text-center slide-in">
+                    <i class="fas fa-database text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-xl font-semibold">SQL Databases</h3>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-6 rounded-xl text-center slide-in" style="animation-delay: 0.2s;">
+                    <i class="fab fa-salesforce text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-xl font-semibold">Salesforce</h3>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-6 rounded-xl text-center slide-in" style="animation-delay: 0.4s;">
+                    <i class="fas fa-cogs text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-xl font-semibold">SAP</h3>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-6 rounded-xl text-center slide-in" style="animation-delay: 0.6s;">
+                    <i class="fab fa-aws text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-xl font-semibold">AWS</h3>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-6 rounded-xl text-center slide-in" style="animation-delay: 0.8s;">
+                    <i class="fab fa-google text-emerald-500 text-5xl mb-6"></i>
+                    <h3 class="text-xl font-semibold">Google Cloud</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-24 bg-gray-900/30 section-bg">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 gradient-text">Plans for Every Goal</h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto text-center">Flexible pricing to match your business needs.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl text-center slide-in">
+                    <h3 class="text-2xl font-semibold mb-4">Starter</h3>
+                    <p class="text-4xl font-bold mb-6">$99<span class="text-lg">/mo</span></p>
+                    <ul class="text-gray-400 mb-6 space-y-2">
+                        <li>3 AI Agents</li>
+                        <li>100 API Calls/Day</li>
+                        <li>Email Support</li>
+                        <li>Basic Integrations</li>
+                    </ul>
+                    <button class="btn-primary px-6 py-3 rounded-lg font-semibold">Get Started</button>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl text-center border-2 border-emerald-500 slide-in" style="animation-delay: 0.2s;">
+                    <h3 class="text-2xl font-semibold mb-4">Professional</h3>
+                    <p class="text-4xl font-bold mb-6">$299<span class="text-lg">/mo</span></p>
+                    <ul class="text-gray-400 mb-6 space-y-2">
+                        <li>7 AI Agents</li>
+                        <li>500 API Calls/Day</li>
+                        <li>Priority Support</li>
+                        <li>Advanced Integrations</li>
+                    </ul>
+                    <button class="btn-primary px-6 py-3 rounded-lg font-semibold">Get Started</button>
+                </div>
+                <div class="card-hover bg-gray-900/80 p-8 rounded-xl text-center slide-in" style="animation-delay: 0.4s;">
+                    <h3 class="text-2xl font-semibold mb-4">Enterprise</h3>
+                    <p class="text-4xl font-bold mb-6">Custom</p>
+                    <ul class="text-gray-400 mb-6 space-y-2">
+                        <li>All 10 AI Agents</li>
+                        <li>Unlimited API Calls</li>
+                        <li>24/7 Dedicated Support</li>
+                        <li>Custom Solutions</li>
+                    </ul>
+                    <button class="btn-primary px-6 py-3 rounded-lg font-semibold">Contact Us</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="cta" class="py-24 section-bg">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 gradient-text">Transform Your Business Today</h2>
+            <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">Join the leaders crushing their challenges with Shyka AI.</p>
+            <div class="flex justify-center gap-6">
+                <button class="btn-primary px-8 py-4 rounded-full text-lg font-semibold">Start Free Trial</button>
+                <button class="btn-secondary px-8 py-4 rounded-full text-lg font-semibold">Book a Live Demo</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-gray-900 py-12 section-bg">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 gradient-text">Shyka AI Suite</h3>
+                    <p class="text-gray-400">The ultimate AI solution for your business.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4 text-gray-200">Explore</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#agents" class="text-gray-400 hover:text-emerald-500 transition">AI Agents</a></li>
+                        <li><a href="#pricing" class="text-gray-400 hover:text-emerald-500 transition">Pricing</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-emerald-500 transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4 text-gray-200">Contact Us</h4>
+                    <p class="text-gray-400">Email: sales@shyka.ai</p>
+                    <p class="text-gray-400">Phone: +1-800-SHYKA-AI</p>
+                    <p class="text-gray-400">Chat: 24/7 Support</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4 text-gray-200">Stay Connected</h4>
+                    <input type="email" placeholder="Your email" class="bg-gray-800/50 rounded-lg px-4 py-2 w-full mb-2 border border-gray-700 focus:ring-2 focus:ring-emerald-500">
+                    <button class="btn-primary px-4 py-2 rounded-lg w-full font-semibold">Subscribe</button>
+                </div>
+            </div>
+            <div class="text-center text-gray-500 mt-8">
+                <p>© 2025 Shyka AI Suite. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <div class="fixed bottom-8 right-8 z-50">
+        <div class="bg-gray-900/90 rounded-2xl shadow-xl w-96" x-show="isChatOpen" x-transition>
+            <div class="p-6 border-b border-gray-700">
+                <h3 class="text-lg font-bold"><i class="fas fa-robot text-emerald-500 mr-2"></i>Shyka Assistant</h3>
+            </div>
+            <div class="h-96 p-4 overflow-y-auto" x-ref="chatContainer">
+                <template x-for="message in chatMessages" :key="message.text">
+                    <div :class="message.sender === 'bot' ? 'chat-message bot' : 'chat-message user'">
+                        <div x-text="message.text"></div>
+                    </div>
+                </template>
+            </div>
+            <div class="p-4">
+                <input type="text" placeholder="Ask me anything..." class="w-full bg-gray-800/50 rounded-lg px-4 py-2 border border-gray-700 focus:ring-2 focus:ring-emerald-500" 
+                       @keyup.enter="chatMessages.push({ sender: 'user', text: $event.target.value }); $event.target.value = ''; chatMessages.push({ sender: 'bot', text: 'I can solve that! Tell me more about: ' + chatMessages[chatMessages.length-2].text })">
+            </div>
+        </div>
+        <button @click="isChatOpen = !isChatOpen" class="ml-auto bg-emerald-500 w-16 h-16 rounded-full shadow-lg hover:bg-emerald-600 transition">
+            <i class="fas fa-comment-alt text-2xl"></i>
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script>
+        function calculateROI() {
+            const revenue = parseFloat(document.getElementById('revenue').value) || 0;
+            const efficiency = parseFloat(document.getElementById('efficiency').value) || 0;
+            const hours = parseFloat(document.getElementById('hours').value) || 0;
+            const savings = revenue * (1 - efficiency / 100) * 0.5 + (hours * 52 * 35); // $35/hr wage
+            document.getElementById('roi-output').innerText = `Potential Annual Savings: $${savings.toFixed(2)}`;
+        }
+
+        function generateExcelDemo() {
+            const input = document.getElementById('excel-input').value.toLowerCase();
+            const regions = input.includes('regional') ? ['North', 'South', 'East', 'West'] : ['Q1'];
+            const data = regions.map(() => Math.floor(Math.random() * 5000) + 2000);
+            document.getElementById('excel-output').innerHTML = `Generated Report: ${input}<br>Sample Data: ${regions.join(', ')} - $${data.join(', $')}`;
+            const ctx = document.getElementById('excel-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: { labels: regions, datasets: [{ label: 'Sales ($)', data: data, backgroundColor: '#10B981' }] },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function downloadExcelDemo() {
+            const input = document.getElementById('excel-input').value;
+            const content = `Shyka AI Excel Report\n${input}\nSample Data: North: $5000, South: $4500`;
+            const link = document.createElement('a');
+            link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(content);
+            link.download = 'shyka-report.xlsx';
+            link.click();
+        }
+
+        function generateForecastDemo() {
+            const input = document.getElementById('forecast-input').value;
+            const pastData = input.match(/\d+/g)?.map(Number) || [5000, 5200, 5400];
+            const forecast = pastData.map((val, i) => val * (1 + 0.05 * (i + 1)));
+            document.getElementById('forecast-output').innerHTML = `Forecast for ${input.split(' ')[1] || '6'} months:<br>$${forecast.slice(-6).join(', $')}`;
+            const ctx = document.getElementById('forecast-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: { labels: Array.from({length: 6}, (_, i) => `M${i+1}`), datasets: [{ label: 'Revenue ($)', data: forecast.slice(-6), borderColor: '#10B981', fill: false }] },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function generateFraudDemo() {
+            const input = document.getElementById('fraud-input').value;
+            const transactions = input.match(/\d+/g)?.map(Number) || [50, 75, 5000, 100];
+            const anomalies = transactions.filter(t => t > 1000);
+            document.getElementById('fraud-output').innerHTML = anomalies.length ? `Fraud Detected!<br>Suspicious: $${anomalies.join(', $')}` : 'All Clear!';
+            const ctx = document.getElementById('fraud-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: { labels: ['Normal', 'Fraud'], datasets: [{ data: [transactions.length - anomalies.length, anomalies.length], backgroundColor: ['#10B981', '#EF4444'] }] }
+            });
+        }
+
+        function generateSegmentDemo() {
+            const input = document.getElementById('segment-input').value;
+            const spends = input.match(/\d+/g)?.map(Number) || [50, 200, 75, 150];
+            const clusters = { low: spends.filter(s => s < 100).length, med: spends.filter(s => s >= 100 && s < 200).length, high: spends.filter(s => s >= 200).length };
+            document.getElementById('segment-output').innerHTML = `Segments Created:<br>Low: ${clusters.low}, Medium: ${clusters.med}, High: ${clusters.high}`;
+            const ctx = document.getElementById('segment-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: { labels: ['Low', 'Medium', 'High'], datasets: [{ data: [clusters.low, clusters.med, clusters.high], backgroundColor: ['#10B981', '#3B82F6', '#F59E0B'] }] }
+            });
+        }
+
+        function generateChurnDemo() {
+            const input = document.getElementById('churn-input').value;
+            const logins = input.match(/\d+/g)?.map(Number) || [5, 2, 10, 1];
+            const risk = logins.map(l => l < 3 ? 'High' : l < 7 ? 'Medium' : 'Low');
+            const highRisk = risk.filter(r => r === 'High').length;
+            document.getElementById('churn-output').innerHTML = `Churn Risk:<br>High Risk: ${highRisk} (${(highRisk / logins.length * 100).toFixed(1)}%)`;
+            const ctx = document.getElementById('churn-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: { labels: ['Low', 'Medium', 'High'], datasets: [{ label: 'Users', data: [risk.filter(r => r === 'Low').length, risk.filter(r => r === 'Medium').length, highRisk], backgroundColor: '#10B981' }] },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function generateImageDemo() {
+            const file = document.getElementById('image-input').files[0];
+            const result = file ? `Classified ${file.name}: Positive (92%)<br>Confidence: High` : 'Please upload an image.';
+            document.getElementById('image-output').innerHTML = result;
+            const ctx = document.getElementById('image-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: { labels: ['Positive', 'Negative'], datasets: [{ data: [92, 8], backgroundColor: ['#10B981', '#EF4444'] }] }
+            });
+        }
+
+        function generateSentimentDemo() {
+            const input = document.getElementById('sentiment-input').value.toLowerCase();
+            const positiveWords = ['amazing', 'great', 'excellent'], negativeWords = ['late', 'bad', 'poor'];
+            const score = positiveWords.some(w => input.includes(w)) ? 80 : negativeWords.some(w => input.includes(w)) ? 20 : 50;
+            document.getElementById('sentiment-output').innerHTML = `Sentiment: ${score > 60 ? 'Positive' : score < 40 ? 'Negative' : 'Neutral'}<br>Score: ${score}%`;
+            const ctx = document.getElementById('sentiment-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: { labels: ['Positive', 'Neutral', 'Negative'], datasets: [{ label: 'Sentiment (%)', data: [score > 60 ? score : 0, score <= 60 && score >= 40 ? score : 0, score < 40 ? 100 - score : 0], backgroundColor: '#10B981' }] },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function generateNLPDemo() {
+            const input = document.getElementById('nlp-input').value;
+            const words = input.split(' ');
+            const summary = words.length > 10 ? `${words.slice(0, 8).join(' ')}...` : input;
+            document.getElementById('nlp-output').innerHTML = `Summary:<br>${summary}`;
+            const ctx = document.getElementById('nlp-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: { labels: words.slice(0, 5), datasets: [{ label: 'Word Frequency', data: words.slice(0, 5).map(() => Math.floor(Math.random() * 5) + 1), borderColor: '#10B981', fill: false }] },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function generateMaintenanceDemo() {
+            const input = document.getElementById('maintenance-input').value;
+            const runtimes = input.match(/\d+/g)?.map(Number) || [100, 200, 300];
+            const risk = runtimes.map(r => r > 250 ? 80 : r > 150 ? 50 : 20);
+            document.getElementById('maintenance-output').innerHTML = `Maintenance Due:<br>Next Failure Risk: ${Math.max(...risk)}%`;
+            const ctx = document.getElementById('maintenance-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'scatter',
+                data: { datasets: [{ label: 'Risk (%)', data: runtimes.map((r, i) => ({ x: r, y: risk[i] })), backgroundColor: '#10B981' }] },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function generateRecommendDemo() {
+            const input = document.getElementById('recommend-input').value.toLowerCase();
+            const items = input.includes('laptop') ? ['Headphones', 'Mouse', 'SSD'] : ['Shirt', 'Pants', 'Shoes'];
+            document.getElementById('recommend-output').innerHTML = `Top Recommendations:<br>${items.join(', ')}`;
+            const ctx = document.getElementById('recommend-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: { labels: items, datasets: [{ label: 'Match Score (%)', data: [90, 85, 80], backgroundColor: '#10B981' }] },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+        }
+    </script>
+</body>
+</html>
